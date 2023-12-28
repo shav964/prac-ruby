@@ -1,0 +1,16 @@
+<h1>Pokémon Win Tracker</h1>
+
+<div class="row">
+  <% @pokemons.each do |pokemon| %>
+    <div class="col-md-4">
+      <div class="card">
+        <%= image_tag pokemon.image_url, class: "card-img-top", alt: pokemon.name %>
+        <div class="card-body">
+          <h5 class="card-title"><%= pokemon.name %></h5>
+          <p class="card-text">勝利数: <%= pokemon.wins %></p>
+          <%= link_to "勝利を記録する", pokemon, method: :update, class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
