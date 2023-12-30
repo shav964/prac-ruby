@@ -2,19 +2,19 @@ default: &default
   adapter: sqlserver
   encoding: utf8
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: test
-  password: testbattle
+  username: winner
+  password: win1484
   host: LAPTOP-9RV10GJ7
-  database: master
+  database: wins
 
 development:
   <<: *default
-  database: master
+  database: wins
 
 test:
   <<: *default
-  database: master
+  database: wins
 
 production:
   <<: *default
-  database: master
+  database: wins
