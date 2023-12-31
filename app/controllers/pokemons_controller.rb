@@ -2,7 +2,7 @@ class PokemonsController < ApplicationController
   before_action :set_pokemon, only: [:show, :update]
 
   def index
-    @pokemons = Pokemon.all
+    @pokemons = Pokemon.order(:pokedex_number)
   end
 
   def show
