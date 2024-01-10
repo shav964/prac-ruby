@@ -1,6 +1,5 @@
 class PokemonsController < ApplicationController
-  before_action :set_pokemon, only: [:show, :update_wins_page, :update_wins]
-
+  before_action :set_pokemon, only: [:show, :update_wins_page, :update_wins, :reset_wins]
   def index
     @pokemon = Pokemon.first
     puts @pokemon.inspect
@@ -35,6 +34,19 @@ class PokemonsController < ApplicationController
       render :update_wins_page
     end
   end
+  
+  def reset_wins
+    set_reset_pokemon
+    puts "DEBUG: Resetting wins for Pokemon #{@reset_pokemon.inspect}"
+  
+    if @reset_pokemon
+      @reset_pokemon.update(wins: 0)
+      redirect_to pokemons_path, notice: "勝利数がリセットされました！"
+    else
+      flash[:alert] = "ポケモンが見つかりませんでした"
+      redirect_to pokemons_path
+    end
+  end
 
   private
 
@@ -43,6 +55,12 @@ class PokemonsController < ApplicationController
   end
 
   def set_pokemon
-    @pokemon = Pokemon.find_by(pokedex_number: params[:pokedex_number])
+    puts "DEBUG: params[:pokedex_number] = #{params[:pokedex_number]}"
+    @pokemon = Pokemon.find_by(pokedex_number: params[:pokedex_number]) if params[:pokedex_number].present?
+  end
+  
+  
+  def set_reset_pokemon
+    @reset_pokemon = Pokemon.find_by(pokedex_number: params[:pokedex_number])
   end
 end

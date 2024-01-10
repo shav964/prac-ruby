@@ -1,17 +1,23 @@
-<!-- update_wins_page.html.erb -->
+<!-- index.html.erb -->
 <h1>Pokémon Win Tracker</h1>
 
 <%= form_with(model: @pokemon, url: update_wins_pokemon_path(pokedex_number: @pokemon&.pokedex_number), method: :patch, local: true) do |form| %>
   <div class="field">
     <%= form.label :pokemon_id, 'ポケモン選択' %>
     <%= form.collection_select :pokedex_number, @pokemons, :pokedex_number, :name, include_blank: true %>
+  </div>
   <div class="field">
-     <%= form.label :additional_wins, '追加勝利数' %>
-     <%= form.number_field :wins, class: "form-control", value: nil %>
-   </div>
+    <%= form.label :additional_wins, '追加勝利数' %>
+    <%= form.number_field :wins, class: "form-control", value: nil %>
+  </div>
   <%= form.submit 'Update Wins', class: "btn btn-primary" %>
 <% end %>
 
+<%= form_with(model: @pokemon, url: reset_wins_pokemon_path(pokedex_number: @pokemon&.pokedex_number), method: :patch, local: true) do |form| %>
+  <div class="field">
+    <%= form.submit 'Reset Wins', class: "btn btn-warning" %>
+  </div>
+<% end %>
 
 <div class="row">
   <% @pokemons.each do |pokemon| %>
