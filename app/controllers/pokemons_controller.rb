@@ -1,5 +1,7 @@
 class PokemonsController < ApplicationController
-  before_action :set_pokemon, only: [:show, :update_wins_page, :update_wins, :reset_wins]
+  before_action :set_pokemon, only: [:show, :update_wins_page, :update_wins]
+  before_action :set_reset_pokemon, only: [:reset_wins]
+
   def index
     @pokemon = Pokemon.first
     puts @pokemon.inspect
@@ -13,20 +15,21 @@ class PokemonsController < ApplicationController
   def update_wins_page
     @pokemons = Pokemon.all
     @additional_wins = 0
-    @pokemon = Pokemon.find_by(pokedex_number: params[:pokedex_number])
+    @pokemon = Pokemon.find_by(pokedex_number: pokemon_params[:pokedex_number])
     logger.debug("DEBUG: @pokemon in update_wins = #{@pokemon.inspect}")
 
     if @pokemon.nil?
-      # @pokemon が見つからなかった場合の処理（例: リダイレクト、エラーメッセージの表示など）
-      # ここでは一時的に例外を発生させていますが、本番環境では適切なエラーハンドリングが必要です。
       raise ActiveRecord::RecordNotFound, "Pokemon not found with pokedex_number: #{params[:pokedex_number]}"
     end
   end
-
   def update_wins
-    @pokemon = Pokemon.find_by(pokedex_number: pokemon_params[:pokedex_number])
+    # パラメータからポケモンの情報を取得
+    pokedex_number_param = params[:pokemon][:pokedex_number]
+  
+    # ポケモン情報をセット
+    @pokemon = Pokemon.find_by(pokedex_number: pokedex_number_param)
     additional_wins = pokemon_params[:wins].to_i || 0
-
+    logger.debug("DEBUG: pokedex_number_param = #{pokedex_number_param}")
     if @pokemon.update(wins: @pokemon.wins + additional_wins)
       redirect_to update_wins_page_pokemon_path(@pokemon), notice: "#{additional_wins}勝利数が追加されました！"
     else
@@ -47,6 +50,7 @@ class PokemonsController < ApplicationController
       redirect_to pokemons_path
     end
   end
+  
 
   private
 
@@ -55,10 +59,8 @@ class PokemonsController < ApplicationController
   end
 
   def set_pokemon
-    puts "DEBUG: params[:pokedex_number] = #{params[:pokedex_number]}"
-    @pokemon = Pokemon.find_by(pokedex_number: params[:pokedex_number]) if params[:pokedex_number].present?
+    @pokemon = Pokemon.find_by(pokedex_number: params[:pokedex_number].to_i)
   end
-  
   
   def set_reset_pokemon
     @reset_pokemon = Pokemon.find_by(pokedex_number: params[:pokedex_number])

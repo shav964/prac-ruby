@@ -15,6 +15,7 @@
 
 <%= form_with(model: @pokemon, url: reset_wins_pokemon_path(pokedex_number: @pokemon&.pokedex_number), method: :patch, local: true) do |form| %>
   <div class="field">
+    <%= form.hidden_field :pokedex_number, value: @pokemon&.pokedex_number %>
     <%= form.submit 'Reset Wins', class: "btn btn-warning" %>
   </div>
 <% end %>
